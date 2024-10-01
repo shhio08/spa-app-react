@@ -10,6 +10,7 @@
     "@types/node": "^16.18.112",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
+    "axios": "^1.7.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
@@ -41,9 +42,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@eslint/js": "^9.11.1",
     "eslint": "^9.11.1",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.0",
     "globals": "^15.9.0",

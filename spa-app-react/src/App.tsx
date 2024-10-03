@@ -1,72 +1,82 @@
-import React, { Component } from 'react';
-// import logo from "./logo.svg";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./App.css";
-import axios from 'axios';
 
-// Propsの型を定義（ここでは空のオブジェクト）
-interface AppProps {}
-
-// Stateの型を定義
-interface AppState {
-  query: string;
-  title?: string;
-  url?: string;
+// Qiita APIのレスポンス用の型定義
+interface QiitaItem {
+  id: string;
+  title: string;
+  url: string;
+  user: {
+    id: string;
+    name: string;
+  };
 }
 
-class App extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.getQiitaPosts = this.getQiitaPosts.bind(this);
-    this.state = {
-      // ここを`React`など検索したいワードに変えられる
-      query: 'React'
-    }
-  }
+const App: React.FC = () => {
+  // 状態を管理
+  const [query, setQuery] = useState<string>("");
+  const [titles, setTitles] = useState<string[]>([]);
 
-  // QiitaAPIを叩く
-  getQiitaPosts() {
-    //axios.get(APIのエンドポイント,パラメータの引数)
-    axios.get('https://qiita.com/api/v2/items', {
+  // QiitaAPIを叩く関数
+  const getQiitaPosts = (query: string) => {
+    const searchQuery = query.trim() !== "" ? query : "最新"; // クエリが空の場合にデフォルト値を使用
+    axios
+      .get("https://qiita.com/api/v2/items", {
         params: {
-          "page": "1",
-          "per_page": "20",
-          "query": this.state.query,
-        }
+          page: "1",
+          per_page: "20",
+          query: searchQuery, // デフォルトまたはユーザー指定のクエリ
+        },
       })
-      // response にAPIからのレスポンスが格納される
       .then((response) => {
-        // data にレスポンスから帰ってきた1つ目の記事の情報を格納
-        const data = response.data[0];
-        this.setState({
-          title: data.title,
-          url: data.url,
-        });
-        // コンソールから response と title と url を確認
-        console.debug(response, "ressponse");
-        console.debug(this.state.title, "title")
-        console.debug(this.state.url, "url")
+        if (response.data && response.data.length > 0) {
+          // Qiita APIレスポンスの型を使用
+          const fetchedTitles = response.data.map(
+            (item: QiitaItem) => item.title,
+          );
+          setTitles(fetchedTitles); // タイトルの配列をセット
+        } else {
+          console.debug("No data found");
+          setTitles([]); // データがない場合は空の配列
+        }
       })
       .catch((error) => {
         console.debug(error);
       });
-  }
+  };
 
-  // 表示されるHTMLを記述
-  render() {
-    return (
-      <div className="App">
-        <h1 className="app-title">Hello Qiita API</h1>
-        <p>タイトル: {this.state.title}</p>
-        <p>URL: <a target="__blank" href={this.state.url}>{this.state.url}</a></p>
-        <input
-          type="button"
-          value="検索"
-          onClick={() => this.getQiitaPosts()}
-        />
-      </div>
-    )
-  }
-}
+  // コンポーネントがマウントされたときに最新記事を取得
+  useEffect(() => {
+    getQiitaPosts(""); // 空のクエリで最新記事を取得
+  }, []);
+
+  return (
+    <div className="App">
+      <h1 className="app-title">Hello Qiita API</h1>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)} // 検索クエリをユーザーが変更できるようにする
+        placeholder="検索ワードを入力"
+      />
+      <input
+        type="button"
+        value="検索"
+        onClick={() => getQiitaPosts(query)} // 検索ボタンでAPIを再呼び出し
+      />
+
+      <h2>記事のタイトル一覧:</h2>
+      <ul>
+        {titles.length > 0 ? (
+          titles.map((title, index) => <li key={index}>{title}</li>)
+        ) : (
+          <p>記事が見つかりませんでした。</p>
+        )}
+      </ul>
+    </div>
+  );
+};
 
 //apiで郵便番号から都道府県を取得するコード
 // function App() {
@@ -103,25 +113,25 @@ class App extends Component<AppProps, AppState> {
 //     </div>
 //   );
 
-  //デフォルトのコード
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       <img src={logo} className="App-logo" alt="logo" />
-  //       <p>
-  //         Edit <code>src/App.tsx</code> and save to reload.
-  //       </p>
-  //       <a
-  //         className="App-link"
-  //         href="https://reactjs.org"
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //       >
-  //         Learn React!!!
-  //       </a>
-  //     </header>
-  //   </div>
-  // );
+//デフォルトのコード
+// return (
+//   <div className="App">
+//     <header className="App-header">
+//       <img src={logo} className="App-logo" alt="logo" />
+//       <p>
+//         Edit <code>src/App.tsx</code> and save to reload.
+//       </p>
+//       <a
+//         className="App-link"
+//         href="https://reactjs.org"
+//         target="_blank"
+//         rel="noopener noreferrer"
+//       >
+//         Learn React!!!
+//       </a>
+//     </header>
+//   </div>
+// );
 // }
 
 export default App;

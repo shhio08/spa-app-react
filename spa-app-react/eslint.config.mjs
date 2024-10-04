@@ -5,10 +5,9 @@ import pluginReact from "eslint-plugin-react";
 import pluginPrettier from "eslint-plugin-prettier"; // Prettier プラグインをインポート
 import configPrettier from "eslint-config-prettier"; // Prettier の設定をインポート
 
-
 export default [
-  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
-  {languageOptions: { globals: {...globals.browser, ...globals.node} }},
+  { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"] },
+  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   {

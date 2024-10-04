@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 // Qiita APIのレスポンス用の型定義
 interface QiitaItem {
@@ -16,7 +27,7 @@ interface QiitaItem {
 const App: React.FC = () => {
   // 状態を管理
   const [query, setQuery] = useState<string>("");
-  const [titles, setTitles] = useState<string[]>([]);
+  const [items, setItems] = useState<QiitaItem[]>([]);
 
   // QiitaAPIを叩く関数
   const getQiitaPosts = (query: string) => {
@@ -31,14 +42,10 @@ const App: React.FC = () => {
       })
       .then((response) => {
         if (response.data && response.data.length > 0) {
-          // Qiita APIレスポンスの型を使用
-          const fetchedTitles = response.data.map(
-            (item: QiitaItem) => item.title,
-          );
-          setTitles(fetchedTitles); // タイトルの配列をセット
+          setItems(response.data); // レスポンスのデータをセット
         } else {
           console.debug("No data found");
-          setTitles([]); // データがない場合は空の配列
+          setItems([]); // データがない場合は空の配列
         }
       })
       .catch((error) => {
@@ -53,27 +60,67 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <h1 className="app-title">Hello Qiita API</h1>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)} // 検索クエリをユーザーが変更できるようにする
-        placeholder="検索ワードを入力"
-      />
-      <input
-        type="button"
-        value="検索"
-        onClick={() => getQiitaPosts(query)} // 検索ボタンでAPIを再呼び出し
-      />
+      <Typography variant="h4" component="h1" gutterBottom>
+        Hello Qiita API
+      </Typography>
 
-      <h2>記事のタイトル一覧:</h2>
-      <ul>
-        {titles.length > 0 ? (
-          titles.map((title, index) => <li key={index}>{title}</li>)
-        ) : (
-          <p>記事が見つかりませんでした。</p>
-        )}
-      </ul>
+      <Box
+        component="form"
+        sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 600, margin: "0 auto", width: "100%" }}
+        noValidate
+        autoComplete="off"
+      >
+        <TextField
+          label="検索ワードを入力"
+          variant="outlined"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)} // 検索クエリをユーザーが変更できるようにする
+          fullWidth
+        />
+        <Button
+          variant="contained"
+          onClick={() => getQiitaPosts(query)} // 検索ボタンでAPIを再呼び出し
+        >
+          検索
+        </Button>
+      </Box>
+
+      <Typography variant="h5" component="h2" sx={{ marginTop: 4 }}>
+        記事のタイトル一覧:
+      </Typography>
+
+      {items.length > 0 ? (
+        <TableContainer component={Paper} sx={{ maxWidth: 800, margin: "0 auto" }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>タイトル</TableCell>
+                <TableCell align="right">ユーザーID</TableCell>
+                <TableCell align="right">リンク</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.title}</TableCell>
+                  <TableCell align="right">{item.user.id}</TableCell>
+                  <TableCell align="right">
+                    <a href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      リンク
+                    </a>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Typography>記事が見つかりませんでした。</Typography>
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import ItemDetail from "./pages/ItemDetail";
 const Router: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} /> {/* Home コンポーネントを使用 */}
+      <Route path="/" element={<Home />} />
       <Route path="/items/:id" element={<ItemDetail />} />
     </Routes>
   );

@@ -13,11 +13,11 @@ export interface QiitaItem {
 
 export const useQiitaItems = () => {
   const [items, setItems] = useState<QiitaItem[]>([]);
-  const [query, setQuery] = useState<string>("");
-  const [error, setError] = useState<string | null>(null); // エラーメッセージ用の状態を追加
+  const [query, setQuery] = useState<string>("最新"); // デフォルトクエリを「最新」に設定
+  const [error, setError] = useState<string | null>(null);
 
   const getQiitaPosts = (query: string) => {
-    const searchQuery = query.trim() !== "" ? query : ""; // クエリを「最新」にする場合は空に
+    const searchQuery = query.trim() !== "" ? query : "最新"; // 空の場合は「最新」を使用
     axios
       .get("https://qiita.com/api/v2/items", {
         params: {
@@ -36,13 +36,13 @@ export const useQiitaItems = () => {
       })
       .catch((error) => {
         console.debug(error);
-        setError("データの取得に失敗しました。"); // エラーメッセージを設定
+        setError("データの取得に失敗しました。");
       });
   };
 
   useEffect(() => {
-    getQiitaPosts(""); // 初回は空のクエリで取得
-  }, []);
+    getQiitaPosts(query); // 初回はデフォルトクエリで取得
+  }, [query]); // query を依存配列に追加
 
-  return { items, query, setQuery, getQiitaPosts, error }; // error も返す
+  return { items, query, setQuery, getQiitaPosts, error };
 };

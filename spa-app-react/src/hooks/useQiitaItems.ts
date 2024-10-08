@@ -57,5 +57,5 @@ export const useQiitaItems = () => {
     }
   }, [query, apiKey]);
 
-  return { items, query, setQuery, getQiitaPosts, error, setApiKey };
+  return { items, query, setQuery, getQiitaPosts, error, setApiKey, apiKey };
 };

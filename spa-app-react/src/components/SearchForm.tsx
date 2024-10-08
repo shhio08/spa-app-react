@@ -21,9 +21,14 @@ const SearchForm: React.FC<SearchFormProps> = ({
   const [apiKey, setLocalApiKey] = useState(""); // ローカルにAPIキーを保持
 
   const handleApiKeySave = () => {
+    if (apiKey.trim() === "") {
+      alert("APIキーを入力してください。"); // 入力が空のときの警告
+      return;
+    }
     setApiKey(apiKey); // APIキーを保存
     setShowApiKeyInput(false); // 入力フォームを非表示にする
   };
+
   return (
     <Box
       component="form"

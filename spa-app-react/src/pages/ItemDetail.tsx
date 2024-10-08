@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import axios from "axios";
-import { useQiitaItems } from "../hooks/useQiitaItems";
+// import { useQiitaItems } from "../hooks/useQiitaItems";
+import { useApiKey } from "../context/ApiKeyContext";
 
 interface QiitaUser {
   id: string;
@@ -22,7 +23,7 @@ const ItemDetail: React.FC = () => {
   const [item, setItem] = useState<QiitaItem | null>(null); // QiitaItem型を使用
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { apiKey } = useQiitaItems();
+  const { apiKey } = useApiKey();
 
   useEffect(() => {
     if (!apiKey) {

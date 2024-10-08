@@ -1,5 +1,7 @@
+// src/hooks/useQiitaItems.ts
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useApiKey } from "../context/ApiKeyContext"; // useApiKeyをインポート
 
 export interface QiitaItem {
   id: string;
@@ -12,13 +14,13 @@ export interface QiitaItem {
 }
 
 export const useQiitaItems = () => {
+  const { apiKey } = useApiKey(); // APIキーを取得
   const [items, setItems] = useState<QiitaItem[]>([]);
-  const [query, setQuery] = useState<string>("最新"); // デフォルトクエリを「最新」に設定
-  const [apiKey, setApiKey] = useState<string>("");
+  const [query, setQuery] = useState<string>("最新");
   const [error, setError] = useState<string | null>(null);
 
   const getQiitaPosts = (query: string) => {
-    const searchQuery = query.trim() !== "" ? query : "最新"; // 空の場合は「最新」を使用
+    const searchQuery = query.trim() !== "" ? query : "最新";
 
     if (!apiKey) {
       setError("APIキーを入力してください。");
@@ -53,9 +55,9 @@ export const useQiitaItems = () => {
 
   useEffect(() => {
     if (apiKey) {
-      getQiitaPosts(query);
+      getQiitaPosts(query); // apiKeyがある場合にのみデータ取得
     }
   }, [query, apiKey]);
 
-  return { items, query, setQuery, getQiitaPosts, error, setApiKey, apiKey };
+  return { items, query, setQuery, getQiitaPosts, error };
 };

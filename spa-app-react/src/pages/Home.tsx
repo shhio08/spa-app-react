@@ -4,14 +4,18 @@ import QiitaTable from "../components/QiitaTable";
 import SearchForm from "../components/SearchForm";
 import { useQiitaItems } from "../hooks/useQiitaItems";
 import { Box, Typography } from "@mui/material";
+import { useApiKey } from "../context/ApiKeyContext";
 
 const Home: React.FC = () => {
-  const { items, query, setQuery, getQiitaPosts, setApiKey, error } =
-    useQiitaItems();
+  const { items, query, setQuery, getQiitaPosts, error } = useQiitaItems();
+  const { apiKey, setApiKey } = useApiKey(); // apiKeyを取得
 
   useEffect(() => {
-    getQiitaPosts(""); // 初回は空のクエリで取得
-  }, [getQiitaPosts]);
+    console.log("APIキー:", apiKey); // デバッグ用
+    if (apiKey) {
+      getQiitaPosts(query); // クエリを指定して取得
+    }
+  }, [apiKey, query]); // apiKeyとqueryの両方を依存関係に追加
 
   console.log(items);
 

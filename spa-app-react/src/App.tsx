@@ -7,7 +7,7 @@ import Router from "./router";
 const App: React.FC = () => {
   return (
     <div className="App">
-      <AppBar position="static">
+      <AppBar position="static" sx={{ marginBottom: 5 }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Qiita API Explorer

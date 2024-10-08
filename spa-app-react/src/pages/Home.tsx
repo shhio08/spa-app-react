@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import QiitaTable from "../components/QiitaTable";
 import SearchForm from "../components/SearchForm";
 import { useQiitaItems } from "../hooks/useQiitaItems";
+import { Box } from "@mui/material";
 
 const Home: React.FC = () => {
   const { items, query, setQuery, getQiitaPosts } = useQiitaItems();
@@ -20,6 +21,7 @@ const Home: React.FC = () => {
         setQuery={setQuery}
         getQiitaPosts={getQiitaPosts}
       />
+      <Box mb={5} />
       <QiitaTable items={items} />
     </div>
   );

@@ -20,6 +20,9 @@ export const useQiitaItems = () => {
     const searchQuery = query.trim() !== "" ? query : "最新"; // 空の場合は「最新」を使用
     axios
       .get("https://qiita.com/api/v2/items", {
+        headers: {
+          // Authorization: `Bearer ${"2c653a09788c413699364122708ced389cef628e"}`, // APIキーをヘッダーにセット
+        },
         params: {
           page: 1,
           per_page: 20,

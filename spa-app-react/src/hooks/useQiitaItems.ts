@@ -14,14 +14,21 @@ export interface QiitaItem {
 export const useQiitaItems = () => {
   const [items, setItems] = useState<QiitaItem[]>([]);
   const [query, setQuery] = useState<string>("最新"); // デフォルトクエリを「最新」に設定
+  const [apiKey, setApiKey] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const getQiitaPosts = (query: string) => {
     const searchQuery = query.trim() !== "" ? query : "最新"; // 空の場合は「最新」を使用
+
+    if (!apiKey) {
+      setError("APIキーを入力してください。");
+      return;
+    }
+
     axios
       .get("https://qiita.com/api/v2/items", {
         headers: {
-          // Authorization: `Bearer ${"2c653a09788c413699364122708ced389cef628e"}`, // APIキーをヘッダーにセット
+          Authorization: `Bearer ${apiKey}`,
         },
         params: {
           page: 1,
@@ -32,6 +39,7 @@ export const useQiitaItems = () => {
       .then((response) => {
         if (response.data && response.data.length > 0) {
           setItems(response.data);
+          setError(null);
         } else {
           console.debug("No data found");
           setItems([]);
@@ -44,8 +52,10 @@ export const useQiitaItems = () => {
   };
 
   useEffect(() => {
-    getQiitaPosts(query); // 初回はデフォルトクエリで取得
-  }, [query]); // query を依存配列に追加
+    if (apiKey) {
+      getQiitaPosts(query);
+    }
+  }, [query, apiKey]);
 
-  return { items, query, setQuery, getQiitaPosts, error };
+  return { items, query, setQuery, getQiitaPosts, error, setApiKey };
 };

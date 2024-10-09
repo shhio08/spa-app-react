@@ -1,10 +1,10 @@
-// src/pages/ItemDetail.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, CircularProgress } from "@mui/material";
 import axios from "axios";
-// import { useQiitaItems } from "../hooks/useQiitaItems";
 import { useApiKey } from "../context/ApiKeyContext";
+import DOMPurify from "dompurify"; // DOMPurifyをインポート
+import { marked } from "marked";
 
 interface QiitaUser {
   id: string;
@@ -24,6 +24,7 @@ const ItemDetail: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { apiKey } = useApiKey();
+  const [htmlBody, setHtmlBody] = useState<string>("");
 
   useEffect(() => {
     if (!apiKey) {
@@ -31,6 +32,7 @@ const ItemDetail: React.FC = () => {
       setLoading(false);
       return;
     }
+
     const fetchItemDetails = async () => {
       try {
         const response = await axios.get<QiitaItem>(
@@ -42,6 +44,10 @@ const ItemDetail: React.FC = () => {
           },
         );
         setItem(response.data);
+
+        const markedBody = marked(response.data.body);
+        const cleanBody = DOMPurify.sanitize(markedBody as string);
+        setHtmlBody(cleanBody);
       } catch (error) {
         console.error(error);
         setError("記事の取得に失敗しました。");
@@ -61,7 +67,7 @@ const ItemDetail: React.FC = () => {
       <Typography variant="h4">{item?.title}</Typography>
       <Typography variant="subtitle1">作成者: {item?.user.name}</Typography>
       <Typography variant="body1" sx={{ marginTop: 2 }}>
-        <div dangerouslySetInnerHTML={{ __html: item?.body || "" }} />
+        <div dangerouslySetInnerHTML={{ __html: htmlBody }} />
       </Typography>
     </div>
   );

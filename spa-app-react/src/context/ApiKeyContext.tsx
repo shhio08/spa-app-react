@@ -11,7 +11,16 @@ const ApiKeyContext = createContext<ApiKeyContextType | undefined>(undefined);
 export const ApiKeyProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [apiKey, setApiKey] = useState<string>("");
+  const [apiKey, setApiKeyState] = useState<string>(() => {
+    // 初期化時に localStorage から API キーを取得
+    return localStorage.getItem("apiKey") || "";
+  });
+
+  // API キーを設定する際に localStorage にも保存
+  const setApiKey = (key: string) => {
+    setApiKeyState(key);
+    localStorage.setItem("apiKey", key); // localStorage に保存
+  };
 
   return (
     <ApiKeyContext.Provider value={{ apiKey, setApiKey }}>

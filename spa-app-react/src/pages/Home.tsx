@@ -8,14 +8,14 @@ import { useApiKey } from "../context/ApiKeyContext";
 
 const Home: React.FC = () => {
   const { items, query, setQuery, getQiitaPosts, error } = useQiitaItems();
-  const { apiKey, setApiKey } = useApiKey(); // apiKeyを取得
+  const { apiKey } = useApiKey();
 
   useEffect(() => {
     console.log("APIキー:", apiKey); // デバッグ用
     if (apiKey) {
       getQiitaPosts(query); // クエリを指定して取得
     }
-  }, [apiKey, query]); // apiKeyとqueryの両方を依存関係に追加
+  }, [apiKey, query, getQiitaPosts]); // getQiitaPostsを依存関係に追加
 
   console.log(items);
 
@@ -25,7 +25,6 @@ const Home: React.FC = () => {
         query={query}
         setQuery={setQuery}
         getQiitaPosts={getQiitaPosts}
-        setApiKey={setApiKey}
       />
 
       <Box mb={5} />

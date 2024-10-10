@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, CircularProgress } from "@mui/material";
+import { Typography, CircularProgress, Box } from "@mui/material";
 import axios from "axios";
 import { useApiKey } from "../context/ApiKeyContext";
 import DOMPurify from "dompurify"; // DOMPurifyをインポート
@@ -63,13 +63,27 @@ const ItemDetail: React.FC = () => {
   if (error) return <Typography color="error">{error}</Typography>;
 
   return (
-    <div>
+    <Box
+      sx={{
+        maxWidth: "800px", // 横幅の制限
+        margin: "0 auto", // 中央寄せ
+        textAlign: "left", // 左寄せ
+        padding: "16px", // 内側の余白
+        "& img": {
+          maxWidth: "100%", // 画像が枠を超えないように
+          height: "auto", // アスペクト比を保つ
+        },
+      }}
+    >
       <Typography variant="h4">{item?.title}</Typography>
-      <Typography variant="subtitle1">作成者: {item?.user.name}</Typography>
+      <Typography variant="subtitle1">
+        {item?.user &&
+          `@${item.user.id}${item.user.name ? ` (${item.user.name})` : ""}`}
+      </Typography>
       <Typography variant="body1" sx={{ marginTop: 2 }}>
         <div dangerouslySetInnerHTML={{ __html: htmlBody }} />
       </Typography>
-    </div>
+    </Box>
   );
 };
 

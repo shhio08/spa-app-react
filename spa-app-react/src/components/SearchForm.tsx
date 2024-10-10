@@ -3,29 +3,30 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import { useApiKey } from "../context/ApiKeyContext"; // 追加
 
 interface SearchFormProps {
   query: string; // クエリの型
   setQuery: (query: string) => void; // setQuery の型
   getQiitaPosts: (query: string) => void; // getQiitaPosts の型
-  setApiKey: (key: string) => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({
   query,
   setQuery,
   getQiitaPosts,
-  setApiKey,
 }) => {
   const [showApiKeyInput, setShowApiKeyInput] = useState(false); // APIキー入力を表示するかどうか
-  const [apiKey, setLocalApiKey] = useState(""); // ローカルにAPIキーを保持
+  const { setApiKey } = useApiKey(); // RecoilのAPIキー管理を使用
+
+  const [localApiKey, setLocalApiKey] = useState(""); // ローカルにAPIキーを保持
 
   const handleApiKeySave = () => {
-    if (apiKey.trim() === "") {
+    if (localApiKey.trim() === "") {
       alert("APIキーを入力してください。"); // 入力が空のときの警告
       return;
     }
-    setApiKey(apiKey); // APIキーを保存
+    setApiKey(localApiKey); // APIキーを保存
     setShowApiKeyInput(false); // 入力フォームを非表示にする
   };
 
@@ -66,7 +67,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
           <TextField
             label="APIキーを入力"
             variant="outlined"
-            value={apiKey}
+            value={localApiKey} // localApiKeyを使用
             onChange={(e) => setLocalApiKey(e.target.value)}
             fullWidth
           />

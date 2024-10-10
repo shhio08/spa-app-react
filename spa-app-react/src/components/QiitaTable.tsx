@@ -53,7 +53,7 @@ const QiitaTable: React.FC<QiitaTableProps> = ({ items }) => {
       width: 150,
       renderCell: (params) => (
         <Link
-          to={`/items/${params.row.id}`}
+          to={`/${params.row.id}`}
           style={{ textDecoration: "none", color: "blue" }}
         >
           詳細を見る
@@ -63,7 +63,7 @@ const QiitaTable: React.FC<QiitaTableProps> = ({ items }) => {
   ];
 
   return (
-    <div style={{ height: 400, maxWidth: "800px", margin: "0 auto" }}>
+    <div style={{ height: 350, maxWidth: "800px", margin: "0 auto" }}>
       <DataGrid
         rows={items.map((item) => ({
           id: item.id,

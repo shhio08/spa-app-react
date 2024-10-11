@@ -1,4 +1,3 @@
-// src/pages/Home.tsx
 import React, { useEffect } from "react";
 import QiitaTable from "../components/QiitaTable";
 import SearchForm from "../components/SearchForm";
@@ -12,7 +11,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (apiKey) {
-      getQiitaPosts(""); // 初期クエリとして空文字を渡す
+      getQiitaPosts("");
     }
   }, [apiKey, getQiitaPosts]);
 

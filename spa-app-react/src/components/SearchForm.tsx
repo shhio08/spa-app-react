@@ -1,4 +1,3 @@
-// src/components/SearchForm.tsx
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -10,7 +9,7 @@ import { queryState } from "../recoil/atoms";
 const SearchForm: React.FC<{ getQiitaPosts: (query: string) => void }> = ({
   getQiitaPosts,
 }) => {
-  const [query, setQuery] = useRecoilState(queryState); // queryの状態をRecoilで管理
+  const [query, setQuery] = useRecoilState(queryState);
   const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const { setApiKey } = useApiKey();
   const [localApiKey, setLocalApiKey] = useState("");
@@ -25,8 +24,8 @@ const SearchForm: React.FC<{ getQiitaPosts: (query: string) => void }> = ({
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // ページリロードを防ぐ
-    getQiitaPosts(query); // 検索を実行
+    e.preventDefault();
+    getQiitaPosts(query);
   };
 
   return (
@@ -52,11 +51,7 @@ const SearchForm: React.FC<{ getQiitaPosts: (query: string) => void }> = ({
           onChange={(e) => setQuery(e.target.value)}
           fullWidth
         />
-        <Button
-          type="submit"
-          variant="contained"
-          // onClick={() => getQiitaPosts(query)}
-        >
+        <Button type="submit" variant="contained">
           検索
         </Button>
         <Button

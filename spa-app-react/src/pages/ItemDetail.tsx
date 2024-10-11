@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Typography, CircularProgress, Box } from "@mui/material";
 import axios from "axios";
 import { useApiKey } from "../context/ApiKeyContext";
-import DOMPurify from "dompurify"; // DOMPurifyをインポート
+import DOMPurify from "dompurify";
 import { marked } from "marked";
 
 interface QiitaUser {
@@ -14,13 +14,13 @@ interface QiitaUser {
 interface QiitaItem {
   id: string;
   title: string;
-  body: string; // bodyを追加
+  body: string;
   user: QiitaUser;
 }
 
 const ItemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [item, setItem] = useState<QiitaItem | null>(null); // QiitaItem型を使用
+  const [item, setItem] = useState<QiitaItem | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { apiKey } = useApiKey();
@@ -39,7 +39,7 @@ const ItemDetail: React.FC = () => {
           `https://qiita.com/api/v2/items/${id}`,
           {
             headers: {
-              Authorization: `Bearer ${apiKey}`, // APIキーをヘッダーに追加
+              Authorization: `Bearer ${apiKey}`,
             },
           },
         );
@@ -65,13 +65,13 @@ const ItemDetail: React.FC = () => {
   return (
     <Box
       sx={{
-        maxWidth: "800px", // 横幅の制限
-        margin: "0 auto", // 中央寄せ
-        textAlign: "left", // 左寄せ
-        padding: "16px", // 内側の余白
+        maxWidth: "800px",
+        margin: "0 auto",
+        textAlign: "left",
+        padding: "16px",
         "& img": {
-          maxWidth: "100%", // 画像が枠を超えないように
-          height: "auto", // アスペクト比を保つ
+          maxWidth: "100%",
+          height: "auto",
         },
       }}
     >
@@ -80,9 +80,9 @@ const ItemDetail: React.FC = () => {
         {item?.user &&
           `@${item.user.id}${item.user.name ? ` (${item.user.name})` : ""}`}
       </Typography>
-      <Typography variant="body1" sx={{ marginTop: 2 }}>
+      <Box sx={{ marginTop: 2 }}>
         <div dangerouslySetInnerHTML={{ __html: htmlBody }} />
-      </Typography>
+      </Box>
     </Box>
   );
 };

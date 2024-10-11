@@ -1,4 +1,3 @@
-// src/context/ApiKeyContext.tsx
 import React, { ReactNode } from "react";
 import { useRecoilState } from "recoil";
 import { apiKeyState } from "../recoil/atoms";
@@ -16,13 +15,11 @@ export const ApiKeyProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [apiKey, setApiKey] = useRecoilState(apiKeyState);
 
-  // API キーを設定する際に localStorage にも保存
   const updateApiKey = (key: string) => {
     setApiKey(key);
-    localStorage.setItem("apiKey", key); // localStorage に保存
+    localStorage.setItem("apiKey", key);
   };
 
-  // 初期化時に localStorage から API キーを取得
   React.useEffect(() => {
     const storedApiKey = localStorage.getItem("apiKey");
     if (storedApiKey) {

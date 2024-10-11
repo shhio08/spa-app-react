@@ -1,9 +1,7 @@
-// src/components/QiitaTable.tsx
 import React, { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Link } from "react-router-dom"; // Linkをインポート
 
-// QiitaItem のインターフェースはそのままです
 export interface QiitaItem {
   id: string;
   title: string;
@@ -14,9 +12,8 @@ export interface QiitaItem {
   };
 }
 
-// QiitaTableProps インターフェースを追加
 interface QiitaTableProps {
-  items: QiitaItem[]; // items の型を指定
+  items: QiitaItem[];
 }
 
 const QiitaTable: React.FC<QiitaTableProps> = ({ items }) => {

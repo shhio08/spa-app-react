@@ -16,27 +16,29 @@ export interface QiitaItem {
 export const useQiitaItems = () => {
   const { apiKey } = useApiKey(); // APIキーを取得
   const [items, setItems] = useState<QiitaItem[]>([]);
-  const [query, setQuery] = useState<string>("最新");
+  const [query, setQuery] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const getQiitaPosts = (query: string) => {
-    const searchQuery = query.trim() !== "" ? query : "最新";
-
     if (!apiKey) {
       setError("APIキーを入力してください。");
       return;
     }
 
+    const params: { page: number; per_page: number; query?: string } = {
+      page: 1,
+      per_page: 20,
+    };
+
+    if (query.trim() !== "") {
+      params.query = query.trim();
+    }
     axios
       .get("https://qiita.com/api/v2/items", {
         headers: {
           Authorization: `Bearer ${apiKey}`,
         },
-        params: {
-          page: 1,
-          per_page: 20,
-          query: searchQuery,
-        },
+        params: params,
       })
       .then((response) => {
         if (response.data && response.data.length > 0) {
@@ -55,9 +57,9 @@ export const useQiitaItems = () => {
 
   useEffect(() => {
     if (apiKey) {
-      getQiitaPosts(query); // apiKeyがある場合にのみデータ取得
+      getQiitaPosts(query);
     }
-  }, [query, apiKey]);
+  }, [query, apiKey, getQiitaPosts]);
 
   return { items, query, setQuery, getQiitaPosts, error };
 };

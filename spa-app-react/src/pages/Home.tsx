@@ -7,25 +7,18 @@ import { Box, Typography } from "@mui/material";
 import { useApiKey } from "../context/ApiKeyContext";
 
 const Home: React.FC = () => {
-  const { items, query, setQuery, getQiitaPosts, error } = useQiitaItems();
+  const { items, getQiitaPosts, error } = useQiitaItems();
   const { apiKey } = useApiKey();
 
   useEffect(() => {
-    console.log("APIキー:", apiKey); // デバッグ用
     if (apiKey) {
-      getQiitaPosts(query); // クエリを指定して取得
+      getQiitaPosts(""); // 初期クエリとして空文字を渡す
     }
-  }, [apiKey, query, getQiitaPosts]); // getQiitaPostsを依存関係に追加
-
-  console.log(items);
+  }, [apiKey, getQiitaPosts]);
 
   return (
     <div>
-      <SearchForm
-        query={query}
-        setQuery={setQuery}
-        getQiitaPosts={getQiitaPosts}
-      />
+      <SearchForm getQiitaPosts={getQiitaPosts} />
 
       <Box mb={5} />
 

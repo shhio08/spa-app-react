@@ -3,31 +3,30 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { useApiKey } from "../context/ApiKeyContext"; // 追加
+import { useApiKey } from "../context/ApiKeyContext";
+import { useRecoilState } from "recoil";
+import { queryState } from "../recoil/atoms";
 
-interface SearchFormProps {
-  query: string; // クエリの型
-  setQuery: (query: string) => void; // setQuery の型
-  getQiitaPosts: (query: string) => void; // getQiitaPosts の型
-}
-
-const SearchForm: React.FC<SearchFormProps> = ({
-  query,
-  setQuery,
+const SearchForm: React.FC<{ getQiitaPosts: (query: string) => void }> = ({
   getQiitaPosts,
 }) => {
-  const [showApiKeyInput, setShowApiKeyInput] = useState(false); // APIキー入力を表示するかどうか
-  const { setApiKey } = useApiKey(); // RecoilのAPIキー管理を使用
-
-  const [localApiKey, setLocalApiKey] = useState(""); // ローカルにAPIキーを保持
+  const [query, setQuery] = useRecoilState(queryState); // queryの状態をRecoilで管理
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const { setApiKey } = useApiKey();
+  const [localApiKey, setLocalApiKey] = useState("");
 
   const handleApiKeySave = () => {
     if (localApiKey.trim() === "") {
-      alert("APIキーを入力してください。"); // 入力が空のときの警告
+      alert("APIキーを入力してください。");
       return;
     }
-    setApiKey(localApiKey); // APIキーを保存
-    setShowApiKeyInput(false); // 入力フォームを非表示にする
+    setApiKey(localApiKey);
+    setShowApiKeyInput(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // ページリロードを防ぐ
+    getQiitaPosts(query); // 検索を実行
   };
 
   return (
@@ -43,6 +42,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
       }}
       noValidate
       autoComplete="off"
+      onSubmit={handleSubmit}
     >
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
@@ -52,7 +52,11 @@ const SearchForm: React.FC<SearchFormProps> = ({
           onChange={(e) => setQuery(e.target.value)}
           fullWidth
         />
-        <Button variant="contained" onClick={() => getQiitaPosts(query)}>
+        <Button
+          type="submit"
+          variant="contained"
+          // onClick={() => getQiitaPosts(query)}
+        >
           検索
         </Button>
         <Button
@@ -67,7 +71,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
           <TextField
             label="APIキーを入力"
             variant="outlined"
-            value={localApiKey} // localApiKeyを使用
+            value={localApiKey}
             onChange={(e) => setLocalApiKey(e.target.value)}
             fullWidth
           />

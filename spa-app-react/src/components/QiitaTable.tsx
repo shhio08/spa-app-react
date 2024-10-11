@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Link } from "react-router-dom"; // Linkをインポート
+import { Link } from "react-router-dom";
 
 export interface QiitaItem {
   id: string;
@@ -29,7 +29,7 @@ const QiitaTable: React.FC<QiitaTableProps> = ({ items }) => {
       width: 400,
       renderCell: (params) => (
         <Link
-          to={`/items/${params.row.id}`}
+          to={`/${params.row.id}`}
           style={{ textDecoration: "none", color: "blue" }}
         >
           {params.value}

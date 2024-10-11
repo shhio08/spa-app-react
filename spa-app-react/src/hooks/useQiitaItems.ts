@@ -59,7 +59,6 @@ export const useQiitaItems = () => {
 
   useEffect(() => {
     if (apiKey) {
-      console.log("えふぇくと");
       getQiitaPosts(query);
     }
   }, [query, apiKey, getQiitaPosts]);

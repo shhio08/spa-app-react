@@ -14,7 +14,7 @@ const App: React.FC = () => {
           <AppBar position="static" sx={{ marginBottom: 5 }}>
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Qiita API Explorer
+                Qiita Explorer
               </Typography>
               <Button color="inherit" href="/">
                 Home

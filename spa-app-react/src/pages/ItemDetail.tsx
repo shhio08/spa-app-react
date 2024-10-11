@@ -16,6 +16,7 @@ interface QiitaItem {
   title: string;
   body: string;
   user: QiitaUser;
+  created_at: string;
 }
 
 const ItemDetail: React.FC = () => {
@@ -27,6 +28,12 @@ const ItemDetail: React.FC = () => {
   const [htmlBody, setHtmlBody] = useState<string>("");
 
   useEffect(() => {
+    if (!id) {
+      setError("記事のIDが無効です。");
+      setLoading(false);
+      return;
+    }
+
     if (!apiKey) {
       setError("APIキーが設定されていません。");
       setLoading(false);
@@ -45,9 +52,15 @@ const ItemDetail: React.FC = () => {
         );
         setItem(response.data);
 
-        const markedBody = marked(response.data.body);
+        const markedBody = marked(response.data.body || "");
         const cleanBody = DOMPurify.sanitize(markedBody as string);
-        setHtmlBody(cleanBody);
+
+        const styledBody = cleanBody.replace(
+          /<pre><code/g,
+          '<pre style="background-color: #f5f5f5; padding: 8px;"><code',
+        );
+
+        setHtmlBody(styledBody);
       } catch (error) {
         console.error(error);
         setError("記事の取得に失敗しました。");
@@ -79,6 +92,10 @@ const ItemDetail: React.FC = () => {
       <Typography variant="subtitle1">
         {item?.user &&
           `@${item.user.id}${item.user.name ? ` (${item.user.name})` : ""}`}
+      </Typography>
+      <Typography variant="body2" sx={{ marginTop: "8px", color: "#555" }}>
+        {item?.created_at &&
+          `公開日: ${new Date(item.created_at).toLocaleDateString()}`}
       </Typography>
       <Box sx={{ marginTop: 2 }}>
         <div dangerouslySetInnerHTML={{ __html: htmlBody }} />
